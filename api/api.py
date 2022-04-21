@@ -144,9 +144,9 @@ def update():
         rowToUpdate = request.get_json()
         rowWithoutKey = rowToUpdate
         print('updated row is: ', rowToUpdate)
-        rowWithoutKey.pop('_id')
-        print('updated row without key is: ', rowWithoutKey)
-        result = db.vehicles.update_one({'id': rowToUpdate['id']}, {"$set": rowToUpdate})
+        # rowWithoutKey.pop('id')
+        # print('updated row without key is: ', rowWithoutKey)
+        result = db.vehicles.update_one({'_id': rowToUpdate['_id']}, {"$set": rowToUpdate})
         print(result)
         return flask.jsonify(message="Success")
     except Exception as ex:
