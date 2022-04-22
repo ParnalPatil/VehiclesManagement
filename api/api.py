@@ -1,5 +1,9 @@
 import matplotlib
 import matplotlib.pyplot as plt
+import random
+import matplotlib.colors as mcolors
+import numpy as np
+
 from itertools import count
 import time
 import flask
@@ -28,8 +32,6 @@ mongodb_client = PyMongo(app)
 db = mongodb_client.db
 # vehicle_db = db['vehicles']
 # vehicles_col = vehicle_db['vehicles']
-
-
 
 @app.route('/time')
 def get_current_time():
@@ -171,19 +173,27 @@ def plot():
     try:
         print("test")
         mnf={}
+        year={}
+        size={}
         # import pdb 
         # pdb.set_trace()
         vehicles = list(db.vehicles.find())
         for itm in vehicles:
-            temp = itm.get('manufacturer',None)
-            # print(temp)
-            if temp:
-                mnf[temp] = mnf.get(temp,0)+1
+            mnf_temp = itm.get('manufacturer',None)
+            year_temp = itm.get('year',None)
+            size_temp = itm.get('size',None)
+            if mnf_temp:
+                mnf[mnf_temp] = mnf.get(mnf_temp,0)+1
+            if year_temp:
+                year[year_temp] = year.get(year_temp,0)+1
+            if size_temp:
+                size[size_temp] = size.get(size_temp,0)+1
 
-        print(mnf)
+        
+        # Manufacturer vs No. of vehicles
         lst1=[key for key in mnf.keys()]
         lst2=[val for val in mnf.values()]
-        #  Bar plot
+        # Bar plot
         matplotlib.pyplot.switch_backend('Agg')
         plt.bar(lst1, lst2, color ='green', width = 0.5)
         plt.xticks(lst1, rotation=90)
@@ -192,7 +202,45 @@ def plot():
         plt.ylabel("No. of vehicles")
         plt.title("Manufacturer vs No. of vehicles")
         plt.show()
-        plt.savefig("asd.png")
+        plt.savefig("manufacturer.png")
+        plt.close()
+
+        # Year vs No of vehicles
+        # print("year: ",year)
+        # year_label=[key for key in year.keys()]
+        # year_count=[val for val in year.keys()]
+        # number_of_colors=len(year_label)
+        # print("years length: ",number_of_colors)
+        # # colors = random.choices(list(mcolors.CSS4_COLORS.values()),k = number_of_colors)
+        # year_count=[val for val in year.keys()]
+        # plt.scatter(year_count, year_label)
+        # # plt.xticks(origin_year, rotation=90)
+        # plt.subplots_adjust(bottom=0.4, top=0.99)
+        # plt.xlabel("Year")
+        # plt.ylabel("No. of vehicles")
+        # plt.title("Year vs No. of vehicles")
+        # plt.show()
+        # plt.savefig("years.png")
+        # plt.close()
+
+        # Size Pie chart
+        print("size: ",size)
+        size_label=[key for key in size.keys()]
+        size_count=[val for val in size.values()]
+        number_of_colors=len(size_count)
+        # colors = random.choices(list(mcolors.CSS4_COLORS.values()),k = number_of_colors)
+        hexadecimal_alphabets = '0123456789ABCDEF'
+        colors = ["#4A" + ''.join([random.choice(hexadecimal_alphabets) for j in range(4)]) for i in range(number_of_colors)]
+        fig, ax = plt.subplots()
+        ax.pie(size_count, labels = size_label, colors = colors, autopct='%.0f%%')
+        ax.set_title('Vehicles size distribution')
+        plt.show()
+        plt.savefig('pie.png')
+        plt.close()
+
+        # Price Distribution
+        
+
 
         return flask.jsonify(message="Success")
     except requests.exceptions.HTTPError as err:
