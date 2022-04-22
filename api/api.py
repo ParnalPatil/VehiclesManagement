@@ -188,17 +188,15 @@ def plot():
         plt.bar(lst1, lst2, color ='green', width = 0.5)
         plt.xticks(lst1, rotation=90)
         plt.subplots_adjust(bottom=0.4, top=0.99)
-        plt.xlabel("Manufacturere")
+        plt.xlabel("Manufacturer")
         plt.ylabel("No. of vehicles")
-        plt.title("Manufacturere vs No. of vehicles")
+        plt.title("Manufacturer vs No. of vehicles")
         plt.show()
         plt.savefig("asd.png")
-
 
         return flask.jsonify(message="Success")
     except requests.exceptions.HTTPError as err:
         return err.response.text, err.response.status_code 
-
 
 if __name__ == "__main__":
     # app.secret_key = 'super secret key'
