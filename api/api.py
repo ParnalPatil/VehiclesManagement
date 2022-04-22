@@ -1,3 +1,6 @@
+import matplotlib
+import matplotlib.pyplot as plt
+from itertools import count
 import time
 import flask
 import json
@@ -163,7 +166,40 @@ def delete():
     except Exception as ex:
         print(ex)
 
+@app.route("/plot", methods=["POST"])
+def plot():
+    try:
+        print("test")
+        mnf={}
+        # import pdb 
+        # pdb.set_trace()
+        vehicles = list(db.vehicles.find())
+        for itm in vehicles:
+            temp = itm.get('manufacturer',None)
+            # print(temp)
+            if temp:
+                mnf[temp] = mnf.get(temp,0)+1
+
+        print(mnf)
+        lst1=[key for key in mnf.keys()]
+        lst2=[val for val in mnf.values()]
+        #  Bar plot
+        matplotlib.pyplot.switch_backend('Agg')
+        plt.bar(lst1, lst2, color ='green', width = 0.5)
+        plt.xticks(lst1, rotation=90)
+        plt.subplots_adjust(bottom=0.4, top=0.99)
+        plt.xlabel("Manufacturere")
+        plt.ylabel("No. of vehicles")
+        plt.title("Manufacturere vs No. of vehicles")
+        plt.show()
+        plt.savefig("asd.png")
+
+
+        return flask.jsonify(message="Success")
+    except requests.exceptions.HTTPError as err:
+        return err.response.text, err.response.status_code 
+
 
 if __name__ == "__main__":
     # app.secret_key = 'super secret key'
-    app.run(port=5000, debug=True)
+    app.run(port=5001, debug=True)
