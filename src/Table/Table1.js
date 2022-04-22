@@ -9,7 +9,6 @@ import { LoginContext } from '../Context/LoginContext'
 
 
 
-
 const empList = [
     { id: 1, name: "Parnal", email: "parnal@gmail.com", phone: 983092028, city: "Pune" }
 ]
