@@ -4,6 +4,12 @@ import random
 import matplotlib.colors as mcolors
 import numpy as np
 
+
+import boto3
+import botocore
+from botocore.client import Config
+
+
 from itertools import count
 import time
 import flask
@@ -239,9 +245,41 @@ def plot():
         plt.close()
 
         # Price Distribution
+
+
+        with open('pie.png') as pltfile:
+            endpoint_url = os.getenv("S3_HOST")
+            boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+            client = boto3.client(
+                "s3", 
+                region_name=os.environ.get('AWS_REGION'),
+                endpoint_url=endpoint_url,
+            )
+            response = client.upload_file(
+                'pie.png',
+                os.getenv('S3_BUCKET'),
+                'pie.png',
+                ExtraArgs={'ACL': 'public-read'}
+            )
         
+        with open('manufacturer.png') as pltfile:
+            endpoint_url = os.getenv("S3_HOST")
+            boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+            client = boto3.client(
+                "s3", 
+                region_name=os.environ.get('AWS_REGION'),
+                endpoint_url=endpoint_url,
+            )
+            response = client.upload_file(
+                'manufacturer.png',
+                os.getenv('S3_BUCKET'),
+                'manufacturer.png',
+                ExtraArgs={'ACL': 'public-read'}
+            )
 
-
+        
         return flask.jsonify(message="Success")
     except requests.exceptions.HTTPError as err:
         return err.response.text, err.response.status_code 
