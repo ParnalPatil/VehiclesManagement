@@ -5,11 +5,9 @@ import random
 import matplotlib.colors as mcolors
 import numpy as np
 
-
 import boto3
 import botocore
 from botocore.client import Config
-
 
 from itertools import count
 import time
@@ -197,23 +195,7 @@ def plot():
                 size[size_temp] = size.get(size_temp,0)+1
 
         
-        # Manufacturer vs No. of vehicles
-        # lst1=[key for key in mnf.keys()]
-        # lst2=[val for val in mnf.values()]
-        # # Bar plot
-        # matplotlib.pyplot.switch_backend('Agg')
-        # plt.bar(lst1, lst2, color ='green', width = 0.5)
-        # plt.xticks(lst1, rotation=90)
-        # plt.figure(figsize = (15,8))
-        # # plt.subplots_adjust(bottom=0.4, top=0.99)
-        # plt.xlabel("Manufacturer")
-        # plt.ylabel("No. of vehicles")
-        # plt.title("Manufacturer vs No. of vehicles")
-        # plt.figure(figsize = (15,8))
-        # plt.show()
-        # plt.savefig("manufacturer.png")
-        # plt.close()
-
+        # Manufacturer vs No. of vehicles -> bar chart
         manufacturer_label=[key for key in mnf.keys()]
         manufacturer_count=[val for val in mnf.values()]
         matplotlib.pyplot.switch_backend('Agg') 
@@ -228,7 +210,7 @@ def plot():
         plt.close()
 
 
-        # Year vs No. of Vehicles
+        # Year vs No. of Vehicles -> line chart
         print("year: ",year)
         year_label=[key for key in year.keys()]
         year_count=[val for val in year.values()]
@@ -312,4 +294,4 @@ def plot():
 
 if __name__ == "__main__":
     # app.secret_key = 'super secret key'
-    app.run(port=5001, debug=True)
+    app.run(port=5000, debug=True)
