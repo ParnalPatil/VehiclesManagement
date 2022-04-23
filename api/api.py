@@ -1,5 +1,6 @@
 import matplotlib
 import matplotlib.pyplot as plt
+import seaborn as sns
 import random
 import matplotlib.colors as mcolors
 import numpy as np
@@ -197,37 +198,48 @@ def plot():
 
         
         # Manufacturer vs No. of vehicles
-        lst1=[key for key in mnf.keys()]
-        lst2=[val for val in mnf.values()]
-        # Bar plot
-        matplotlib.pyplot.switch_backend('Agg')
-        plt.bar(lst1, lst2, color ='green', width = 0.5)
-        plt.xticks(lst1, rotation=90)
-        plt.subplots_adjust(bottom=0.4, top=0.99)
+        # lst1=[key for key in mnf.keys()]
+        # lst2=[val for val in mnf.values()]
+        # # Bar plot
+        # matplotlib.pyplot.switch_backend('Agg')
+        # plt.bar(lst1, lst2, color ='green', width = 0.5)
+        # plt.xticks(lst1, rotation=90)
+        # plt.figure(figsize = (15,8))
+        # # plt.subplots_adjust(bottom=0.4, top=0.99)
+        # plt.xlabel("Manufacturer")
+        # plt.ylabel("No. of vehicles")
+        # plt.title("Manufacturer vs No. of vehicles")
+        # plt.figure(figsize = (15,8))
+        # plt.show()
+        # plt.savefig("manufacturer.png")
+        # plt.close()
+
+        manufacturer_label=[key for key in mnf.keys()]
+        manufacturer_count=[val for val in mnf.values()]
+        matplotlib.pyplot.switch_backend('Agg') 
+        sns.set_style('darkgrid')
+        plt.figure(figsize = (15,8))
+        sns.barplot(manufacturer_label, manufacturer_count)
+        plt.xticks(rotation=90)
         plt.xlabel("Manufacturer")
         plt.ylabel("No. of vehicles")
-        plt.title("Manufacturer vs No. of vehicles")
         plt.show()
-        plt.savefig("manufacturer.png")
+        plt.savefig('manufacturer.png')
         plt.close()
 
-        # Year vs No of vehicles
-        # print("year: ",year)
-        # year_label=[key for key in year.keys()]
-        # year_count=[val for val in year.keys()]
-        # number_of_colors=len(year_label)
-        # print("years length: ",number_of_colors)
-        # # colors = random.choices(list(mcolors.CSS4_COLORS.values()),k = number_of_colors)
-        # year_count=[val for val in year.keys()]
-        # plt.scatter(year_count, year_label)
-        # # plt.xticks(origin_year, rotation=90)
-        # plt.subplots_adjust(bottom=0.4, top=0.99)
-        # plt.xlabel("Year")
-        # plt.ylabel("No. of vehicles")
-        # plt.title("Year vs No. of vehicles")
-        # plt.show()
-        # plt.savefig("years.png")
-        # plt.close()
+
+        # Year vs No. of Vehicles
+        print("year: ",year)
+        year_label=[key for key in year.keys()]
+        year_count=[val for val in year.values()]
+        sns.set_theme(style="darkgrid")
+        plt.figure(figsize = (15,8))
+        sns.lineplot(year_label, year_count)
+        plt.xlabel("Year")
+        plt.ylabel("No. of vehicles")
+        plt.show()
+        plt.savefig('years.png')
+        plt.close()
 
         # Size Pie chart
         print("size: ",size)
@@ -244,24 +256,6 @@ def plot():
         plt.savefig('pie.png')
         plt.close()
 
-        # Price Distribution
-
-
-        with open('pie.png') as pltfile:
-            endpoint_url = os.getenv("S3_HOST")
-            boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-            client = boto3.client(
-                "s3", 
-                region_name=os.environ.get('AWS_REGION'),
-                endpoint_url=endpoint_url,
-            )
-            response = client.upload_file(
-                'pie.png',
-                os.getenv('S3_BUCKET'),
-                'pie.png',
-                ExtraArgs={'ACL': 'public-read'}
-            )
         
         with open('manufacturer.png') as pltfile:
             endpoint_url = os.getenv("S3_HOST")
@@ -279,7 +273,39 @@ def plot():
                 ExtraArgs={'ACL': 'public-read'}
             )
 
+        with open('years.png') as pltfile:
+            endpoint_url = os.getenv("S3_HOST")
+            boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+            client = boto3.client(
+                "s3", 
+                region_name=os.environ.get('AWS_REGION'),
+                endpoint_url=endpoint_url,
+            )
+            response = client.upload_file(
+                'years.png',
+                os.getenv('S3_BUCKET'),
+                'years.png',
+                ExtraArgs={'ACL': 'public-read'}
+            )
         
+        with open('pie.png') as pltfile:
+            endpoint_url = os.getenv("S3_HOST")
+            boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+            client = boto3.client(
+                "s3", 
+                region_name=os.environ.get('AWS_REGION'),
+                endpoint_url=endpoint_url,
+            )
+            response = client.upload_file(
+                'pie.png',
+                os.getenv('S3_BUCKET'),
+                'pie.png',
+                ExtraArgs={'ACL': 'public-read'}
+            )
+        
+
         return flask.jsonify(message="Success")
     except requests.exceptions.HTTPError as err:
         return err.response.text, err.response.status_code 

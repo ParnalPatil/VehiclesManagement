@@ -23,6 +23,7 @@ MarkupSafe==2.1.1
 matplotlib==3.5.1
 numpy==1.22.3
 packaging==21.3
+pandas==1.4.2
 Pillow==9.1.0
 pycparser==2.21
 PyJWT==2.3.0
@@ -30,8 +31,11 @@ pymongo==4.0.2
 pyparsing==3.0.8
 python-dateutil==2.8.2
 python-dotenv==0.20.0
+pytz==2022.1
 requests==2.27.1
 s3transfer==0.5.2
+scipy==1.8.0
+seaborn==0.11.2
 six==1.16.0
 typing_extensions==4.1.1
 urllib3==1.26.9
