@@ -49,18 +49,30 @@ function Navbar() {
         navigate('/login')
     }
 
+    const handlePlot=()=>{
+        navigate('/plot')
+    }
+    const handleLogo=()=>{
+        navigate('/')
+    }
+
     const classes = useStyles();
 
     return (
         <AppBar position="static">
             <CssBaseline />
             <Toolbar>
-                <Typography variant="h4" className={classes.logo}>
-                    USD Vehicles
+                <Typography variant="h4" className={classes.logo} onClick={handleLogo}>
+                    USDWheels
                 </Typography>
                 {
                     (token_from_storage && token_from_storage != "" && token_from_storage != undefined) ?
+                    <div>
+                        <Button variant="contained" onClick={handlePlot}>Plots</Button>
+                        {" "}
                         <Button variant="contained" onClick={handleLogOut}>Logout</Button>
+                        
+                    </div>
                         :
                         <div></div>
                 }
