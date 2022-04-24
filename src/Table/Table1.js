@@ -126,7 +126,7 @@ function Table1() {
                             const index = oldRow.tableData.id;
                             const updatedRows = [...data]
                             setIsFetching(true)
-                            axios.post(baseUrl + '/update', updatedRow)
+                            axios.post(baseUrl + '/update', oldRow)
                                 .then((res) => {
                                     console.log('fetched: ', res)
                                     updatedRows[index] = updatedRow
