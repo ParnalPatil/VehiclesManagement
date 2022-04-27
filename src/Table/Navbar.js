@@ -50,7 +50,7 @@ function Navbar() {
     }
 
     const handlePlot=()=>{
-        navigate('/plot')
+        navigate('/getdetails')
     }
     const handleLogo=()=>{
         navigate('/')

@@ -2,6 +2,10 @@ import React from "react";
 import Navbar from "../Table/Navbar";
 
 const Plot = () => {
+
+  const data = localStorage.getItem('manufacture-link')
+  console.log(data)
+
   return (
     <div>
       <Navbar />
@@ -16,7 +20,7 @@ const Plot = () => {
             }}
           >
             <img
-              src="https://s3.us-east-2.amazonaws.com/vehicles-plot/manufacturer.png"
+              src={localStorage.getItem('manufacture-link')}
               width="1200"
               height="700"
             ></img>
@@ -30,7 +34,7 @@ const Plot = () => {
             }}
           >
             <img
-              src="https://s3.us-east-2.amazonaws.com/vehicles-plot/years.png"
+              src={localStorage.getItem('years-link')}
               width="1200"
               height="600"
             ></img>
@@ -43,7 +47,7 @@ const Plot = () => {
               alignItems: "center",
             }}
           >
-            <img src="https://s3.us-east-2.amazonaws.com/vehicles-plot/pie.png"></img>
+            <img src={localStorage.getItem('pie-link')}></img>
           </li>
         </ul>
       </div>
