@@ -6,7 +6,7 @@ import { baseUrl } from '../baseurls';
 import Plot from "./Plot";
 import { useNavigate } from "react-router";
 
-const regions = ["auburn", "birmingham", "dothan"];
+const regions=['Rushi', 'SF bay area', 'anchorage / mat-su', 'auburn', 'bakersfield', 'birmingham', 'chico', 'dothan', 'fairbanks', 'fayetteville', 'flagstaff / sedona', 'florence / muscle shoals', 'fort smith', 'fresno / madera', 'gadsden-anniston', 'gold country', 'hanford-corcoran', 'humboldt county', 'huntsville / decatur', 'imperial county', 'inland empire', 'jonesboro', 'kenai peninsula', 'little rock', 'los angeles', 'mendocino county', 'merced', 'mobile', 'modesto', 'mohave county', 'monterey bay', 'montgomery', 'orange county', 'palm springs', 'phoenix', 'prescott', 'redding', 'reno / tahoe', 'rushi', 'sacramento', 'san diego', 'san luis obispo', 'santa barbara', 'santa maria', 'show low', 'sierra vista', 'siskiyou county', 'southeast alaska', 'stockton', 'texarkana', 'tucson', 'tuscaloosa', 'yuma']
 
 const GetDetails = () => {
 
@@ -15,6 +15,11 @@ const GetDetails = () => {
   const [region, setRegion]=useState(null)
   const [price_start, setPriceStart]=useState(null)
   const [price_end, setPriceEnd]=useState(null)
+
+  const token_from_storage = sessionStorage.getItem("token")
+ 
+
+
 
   const submitHandler = (e) => {
       e.preventDefault()
@@ -50,9 +55,9 @@ const GetDetails = () => {
     }
     document.getElementById("region-select").innerHTML = region_option;
   }, [document.getElementById("region-select")]);
-
-  return (
-    <div>
+  
+  return (<div>
+   {token_from_storage && token_from_storage != "" && token_from_storage != undefined ? (<div>
       <Navbar />
       <div>
         <div
@@ -110,7 +115,9 @@ const GetDetails = () => {
           </form>
         </div>
       </div>
-    </div>
+    </div>) : (<p> Please login/Signup first</p>)
+  }
+  </div>
   );
 };
 

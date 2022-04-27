@@ -41,7 +41,7 @@ function Navbar() {
     let navigate = useNavigate();
 
     const handleLogOut = () => {
-        sessionStorage.removeItem("token")
+        sessionStorage.setItem("token","")
         navigate('/login')
     }
 
