@@ -41,7 +41,7 @@ function Navbar() {
     let navigate = useNavigate();
 
     const handleLogOut = () => {
-        sessionStorage.removeItem("token")
+        sessionStorage.setItem("token","")
         navigate('/login')
     }
 
@@ -50,7 +50,7 @@ function Navbar() {
     }
 
     const handlePlot=()=>{
-        navigate('/plot')
+        navigate('/getdetails')
     }
     const handleLogo=()=>{
         navigate('/')

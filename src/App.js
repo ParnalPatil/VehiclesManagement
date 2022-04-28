@@ -5,7 +5,8 @@ import SignUp from "./Authentication/SignUp";
 import Login from "./Authentication/Login";
 import Table1 from "./Table/Table1";
 import Navbar from "./Table/Navbar";
-import Plot from "./Plot/Plot";
+import GetDetails from "./Plot/GetDetails";
+import Plot from "./Plot/Plot"
 import { LoginContext } from "./Context/LoginContext";
 
 function App() {
@@ -20,7 +21,9 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path="/navbar" element={<Navbar />} />
-            <Route path="/plot" element={<Plot />} />
+            <Route path="/getdetails" element={<GetDetails />} />
+            <Route path="/plots" element={<Plot/>}/>
+
             <Route path="/" element={<Table1 />} />
           </Routes>
         </BrowserRouter>

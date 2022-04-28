@@ -1,9 +1,12 @@
+from cmath import inf
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import random
 import matplotlib.colors as mcolors
 import numpy as np
+
+import uuid 
 
 import boto3
 import botocore
@@ -173,16 +176,144 @@ def delete():
     except Exception as ex:
         print(ex)
 
+# @app.route("/plot", methods=["POST"])
+# def plot():
+#     try:
+#         print("test")
+#         mnf={}
+#         year={}
+#         size={}
+#         # import pdb 
+#         # pdb.set_trace()
+#         vehicles = list(db.vehicles.find())
+#         for itm in vehicles:
+#             mnf_temp = itm.get('manufacturer',None)
+#             year_temp = itm.get('year',None)
+#             size_temp = itm.get('size',None)
+#             if mnf_temp:
+#                 mnf[mnf_temp] = mnf.get(mnf_temp,0)+1
+#             if year_temp:
+#                 year[year_temp] = year.get(year_temp,0)+1
+#             if size_temp:
+#                 size[size_temp] = size.get(size_temp,0)+1
+
+        
+#         # Manufacturer vs No. of vehicles -> bar chart
+#         manufacturer_label=[key for key in mnf.keys()]
+#         manufacturer_count=[val for val in mnf.values()]
+#         matplotlib.pyplot.switch_backend('Agg') 
+#         sns.set_style('darkgrid')
+#         plt.figure(figsize = (15,8))
+#         sns.barplot(manufacturer_label, manufacturer_count)
+#         plt.xticks(rotation=90)
+#         plt.xlabel("Manufacturer")
+#         plt.ylabel("No. of vehicles")
+#         plt.show()
+#         plt.savefig('manufacturer.png')
+#         plt.close()
+
+
+#         # Year vs No. of Vehicles -> line chart
+#         print("year: ",year)
+#         year_label=[key for key in year.keys()]
+#         year_count=[val for val in year.values()]
+#         sns.set_theme(style="darkgrid")
+#         plt.figure(figsize = (15,8))
+#         sns.lineplot(year_label, year_count)
+#         plt.xlabel("Year")
+#         plt.ylabel("No. of vehicles")
+#         plt.show()
+#         plt.savefig('years.png')
+#         plt.close()
+
+#         # Size Pie chart
+#         print("size: ",size)
+#         size_label=[key for key in size.keys()]
+#         size_count=[val for val in size.values()]
+#         number_of_colors=len(size_count)
+#         # colors = random.choices(list(mcolors.CSS4_COLORS.values()),k = number_of_colors)
+#         hexadecimal_alphabets = '0123456789ABCDEF'
+#         colors = ["#4A" + ''.join([random.choice(hexadecimal_alphabets) for j in range(4)]) for i in range(number_of_colors)]
+#         fig, ax = plt.subplots()
+#         ax.pie(size_count, labels = size_label, colors = colors, autopct='%.0f%%')
+#         ax.set_title('Vehicles size distribution')
+#         plt.show()
+#         plt.savefig('pie.png')
+#         plt.close()
+
+        
+#         # with open('manufacturer.png') as pltfile:
+#         #     endpoint_url = os.getenv("S3_HOST")
+#         #     boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+#         #                     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+#         #     client = boto3.client(
+#         #         "s3", 
+#         #         region_name=os.environ.get('AWS_REGION'),
+#         #         endpoint_url=endpoint_url,
+#         #     )
+#         #     response = client.upload_file(
+#         #         'manufacturer.png',
+#         #         os.getenv('S3_BUCKET'),
+#         #         'manufacturer.png',
+#         #         ExtraArgs={'ACL': 'public-read'}
+#         #     )
+
+#         # with open('years.png') as pltfile:
+#         #     endpoint_url = os.getenv("S3_HOST")
+#         #     boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+#         #                     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+#         #     client = boto3.client(
+#         #         "s3", 
+#         #         region_name=os.environ.get('AWS_REGION'),
+#         #         endpoint_url=endpoint_url,
+#         #     )
+#         #     response = client.upload_file(
+#         #         'years.png',
+#         #         os.getenv('S3_BUCKET'),
+#         #         'years.png',
+#         #         ExtraArgs={'ACL': 'public-read'}
+#         #     )
+        
+#         # with open('pie.png') as pltfile:
+#         #     endpoint_url = os.getenv("S3_HOST")
+#         #     boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+#         #                     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+#         #     client = boto3.client(
+#         #         "s3", 
+#         #         region_name=os.environ.get('AWS_REGION'),
+#         #         endpoint_url=endpoint_url,
+#         #     )
+#         #     response = client.upload_file(
+#         #         'pie.png',
+#         #         os.getenv('S3_BUCKET'),
+#         #         'pie.png',
+#         #         ExtraArgs={'ACL': 'public-read'}
+#         #     )
+        
+
+#         return flask.jsonify(message="Success")
+#     except requests.exceptions.HTTPError as err:
+#         return err.response.text, err.response.status_code 
+
+
 @app.route("/plot", methods=["POST"])
 def plot():
     try:
-        print("test")
+        req=request.get_json()
+        region=req.get("region")
+        price_start=req.get("price_start")
+        price_end=req.get("price_end")
+        year_manufactured=req.get("year_manufactured")
+
+        if region:
+            vehicles = list(db.vehicles.find({"region": region,"price":{"$gt": 0 if not price_start else price_start, "$lt":float('inf') if not price_end else price_end}}))
+        else:
+            vehicles = list(db.vehicles.find({"price":{"$gt": 0 if not price_start else price_start, "$lt":float('inf') if not price_end else price_end}}))
+        
         mnf={}
         year={}
         size={}
-        # import pdb 
-        # pdb.set_trace()
-        vehicles = list(db.vehicles.find())
+
         for itm in vehicles:
             mnf_temp = itm.get('manufacturer',None)
             year_temp = itm.get('year',None)
@@ -194,7 +325,6 @@ def plot():
             if size_temp:
                 size[size_temp] = size.get(size_temp,0)+1
 
-        
         # Manufacturer vs No. of vehicles -> bar chart
         manufacturer_label=[key for key in mnf.keys()]
         manufacturer_count=[val for val in mnf.values()]
@@ -205,13 +335,32 @@ def plot():
         plt.xticks(rotation=90)
         plt.xlabel("Manufacturer")
         plt.ylabel("No. of vehicles")
+        plt.title(f'Manufacturer vs No of Vehicles for total {len(vehicles)} vehicles')
         plt.show()
+        unique_id=uuid.uuid4().hex[:10].upper()
+        imgname_manufacturer = "manufacturer-"+unique_id
         plt.savefig('manufacturer.png')
+        plt.savefig(f'{imgname_manufacturer}.png')
         plt.close()
+
+        with open(f'{imgname_manufacturer}.png') as pltfile:
+            endpoint_url = os.getenv("S3_HOST")
+            boto3.setup_default_session(aws_access_key_id=os.getenv('ACCESS_KEY'),
+                            aws_secret_access_key=os.getenv('SECRET_KEY'))
+            client = boto3.client(
+                "s3", 
+                region_name=os.environ.get('AWS_REGION'),
+                endpoint_url=endpoint_url,
+            )
+            response = client.upload_file(
+                f'{imgname_manufacturer}.png',
+                os.getenv('S3_BUCKET'),
+                f'{imgname_manufacturer}.png',
+                ExtraArgs={'ACL': 'public-read'}
+            )
 
 
         # Year vs No. of Vehicles -> line chart
-        print("year: ",year)
         year_label=[key for key in year.keys()]
         year_count=[val for val in year.values()]
         sns.set_theme(style="darkgrid")
@@ -219,12 +368,30 @@ def plot():
         sns.lineplot(year_label, year_count)
         plt.xlabel("Year")
         plt.ylabel("No. of vehicles")
+        plt.title(f'Make Year vs No of Vehicles for total {len(vehicles)} vehicles')
         plt.show()
-        plt.savefig('years.png')
+        imgname_years = "years-"+unique_id
+        plt.savefig(f'{imgname_years}.png')
         plt.close()
 
+        with open(f'{imgname_years}.png') as pltfile:
+            endpoint_url = os.getenv("S3_HOST")
+            boto3.setup_default_session(aws_access_key_id=os.getenv('ACCESS_KEY'),
+                            aws_secret_access_key=os.getenv('SECRET_KEY'))
+            client = boto3.client(
+                "s3", 
+                region_name=os.environ.get('AWS_REGION'),
+                endpoint_url=endpoint_url,
+            )
+            response = client.upload_file(
+                f'{imgname_years}.png',
+                os.getenv('S3_BUCKET'),
+                f'{imgname_years}.png',
+                ExtraArgs={'ACL': 'public-read'}
+            )
+
         # Size Pie chart
-        print("size: ",size)
+        
         size_label=[key for key in size.keys()]
         size_count=[val for val in size.values()]
         number_of_colors=len(size_count)
@@ -233,65 +400,40 @@ def plot():
         colors = ["#4A" + ''.join([random.choice(hexadecimal_alphabets) for j in range(4)]) for i in range(number_of_colors)]
         fig, ax = plt.subplots()
         ax.pie(size_count, labels = size_label, colors = colors, autopct='%.0f%%')
-        ax.set_title('Vehicles size distribution')
+        ax.set_title(f'Vehicles size distribution of total {len(vehicles)} vehicles')
         plt.show()
-        plt.savefig('pie.png')
+        imgname_pie = "pie-"+unique_id
+        plt.savefig(f'{imgname_pie}.png')
         plt.close()
 
-        
-        with open('manufacturer.png') as pltfile:
-            endpoint_url = os.getenv("S3_HOST")
-            boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-            client = boto3.client(
-                "s3", 
-                region_name=os.environ.get('AWS_REGION'),
-                endpoint_url=endpoint_url,
-            )
-            response = client.upload_file(
-                'manufacturer.png',
-                os.getenv('S3_BUCKET'),
-                'manufacturer.png',
-                ExtraArgs={'ACL': 'public-read'}
-            )
 
-        with open('years.png') as pltfile:
+        with open(f'{imgname_pie}.png') as pltfile:
             endpoint_url = os.getenv("S3_HOST")
-            boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+            boto3.setup_default_session(aws_access_key_id=os.getenv('ACCESS_KEY'),
+                            aws_secret_access_key=os.getenv('SECRET_KEY'))
             client = boto3.client(
                 "s3", 
                 region_name=os.environ.get('AWS_REGION'),
                 endpoint_url=endpoint_url,
             )
             response = client.upload_file(
-                'years.png',
+                f'{imgname_pie}.png',
                 os.getenv('S3_BUCKET'),
-                'years.png',
+                f'{imgname_pie}.png',
                 ExtraArgs={'ACL': 'public-read'}
             )
-        
-        with open('pie.png') as pltfile:
-            endpoint_url = os.getenv("S3_HOST")
-            boto3.setup_default_session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-            client = boto3.client(
-                "s3", 
-                region_name=os.environ.get('AWS_REGION'),
-                endpoint_url=endpoint_url,
-            )
-            response = client.upload_file(
-                'pie.png',
-                os.getenv('S3_BUCKET'),
-                'pie.png',
-                ExtraArgs={'ACL': 'public-read'}
-            )
-        
-
-        return flask.jsonify(message="Success")
+    
+        image_links={
+            "manufacturer":f'https://s3.us-east-2.amazonaws.com/vehicles-plot/{imgname_manufacturer}.png',
+            "years":f'https://s3.us-east-2.amazonaws.com/vehicles-plot/{imgname_years}.png',
+            "pie":f'https://s3.us-east-2.amazonaws.com/vehicles-plot/{imgname_pie}.png'
+        }
+        return flask.jsonify(image_links)
     except requests.exceptions.HTTPError as err:
         return err.response.text, err.response.status_code 
 
+       
+
 if __name__ == "__main__":
     # app.secret_key = 'super secret key'
-    app.run(port=5000, debug=True)
+    app.run(port=5001, debug=True)
