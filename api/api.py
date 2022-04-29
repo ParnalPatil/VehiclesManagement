@@ -25,7 +25,7 @@ import requests
 import bcrypt
 import os
 
-app = Flask(__name__, static_folder='used_vehicles/build', static_url_path='')
+app = Flask(__name__, static_folder='used_vehicles/build')
 # app.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
 app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET')
 CORS(app)
