@@ -50,10 +50,11 @@ def index():
 
 @app.route('/')
 def index():
-    if 'username' in session:
-        return 'You are logged in as ' + session['username']
+    return send_from_directory(app.static_folder, 'index.html')
+    # if 'username' in session:
+    #     return 'You are logged in as ' + session['username']
 
-    return flask.jsonify(message="LoggedIn")
+    # return flask.jsonify(message="LoggedIn")
 
 @app.route('/token', methods=["POST"])
 def create_token():
