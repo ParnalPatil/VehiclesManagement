@@ -29,7 +29,7 @@ import requests
 import bcrypt
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='used_vehicles/build')
 # app.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
 app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET')
 CORS(app)
@@ -436,4 +436,4 @@ def plot():
 
 if __name__ == "__main__":
     # app.secret_key = 'super secret key'
-    app.run(port=5001, debug=True)
+    app.run(port=5000, debug=True)
