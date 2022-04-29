@@ -9,21 +9,13 @@ import numpy as np
 import uuid 
 
 import boto3
-import botocore
 from botocore.client import Config
 
 from itertools import count
 import time
 import flask
-import json
-import math
-<<<<<<< HEAD
 from flask import Flask, request, send_from_directory, url_for, session, redirect
-=======
-from flask import Flask, request, url_for, session, redirect
->>>>>>> 7fb9e39d6f7d96a11a436d0d3b1f3dd091ce98f9
 from flask_cors import CORS, cross_origin
-import pymongo
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
@@ -33,11 +25,7 @@ import requests
 import bcrypt
 import os
 
-<<<<<<< HEAD
 app = Flask(__name__, static_folder='used_vehicles/build', static_url_path='')
-=======
-app = Flask(__name__, static_folder='used_vehicles/build')
->>>>>>> 7fb9e39d6f7d96a11a436d0d3b1f3dd091ce98f9
 # app.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
 app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET')
 CORS(app)
@@ -55,16 +43,13 @@ def get_current_time():
 
 @app.route('/')
 def index():
-<<<<<<< HEAD
     return send_from_directory(app.static_folder, 'index.html')
 
-    # return flask.jsonify(message="LoggedIn")
+    # return flask.jsonify(message="LoggedIn") 
 
 
 @app.route('/')
 def index():
-=======
->>>>>>> 7fb9e39d6f7d96a11a436d0d3b1f3dd091ce98f9
     if 'username' in session:
         return 'You are logged in as ' + session['username']
 
