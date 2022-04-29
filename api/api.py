@@ -41,12 +41,6 @@ db = mongodb_client.db
 def get_current_time():
     return {'time': time.time()}
 
-@app.route('/')
-def index():
-    return send_from_directory(app.static_folder, 'index.html')
-
-    # return flask.jsonify(message="LoggedIn") 
-
 
 @app.route('/')
 def index():
