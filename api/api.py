@@ -25,7 +25,7 @@ import requests
 import bcrypt
 import os
 
-app = Flask(__name__, static_folder='used_vehicles/build', static_url_path='')
+app = Flask(__name__, static_folder='build', static_url_path='')
 # app.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
 app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET')
 CORS(app)
@@ -37,18 +37,22 @@ db = mongodb_client.db
 # vehicle_db = db['vehicles']
 # vehicles_col = vehicle_db['vehicles']
 
-@app.route('/time')
-def get_current_time():
-    return {'time': time.time()}
-
-
 @app.route('/')
 def serve():
-    return send_from_directory(app.static_folder, 'index.html')
+    # print(app.static_folder)
+    # a_file = open("fdr_inaugural_address.html")
+    # file_contents = a_file.read()
+    # print(file_contents)
+    return send_from_directory(app.static_folder, 'index.html', cache_timeout=0)
     # if 'username' in session:
     #     return 'You are logged in as ' + session['username']
 
     # return flask.jsonify(message="LoggedIn")
+
+@app.route('/time')
+def get_current_time():
+    return {'time': time.time()}
+
 
 @app.route('/token', methods=["POST"])
 def create_token():
