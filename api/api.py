@@ -25,7 +25,7 @@ import requests
 import bcrypt
 import os
 
-app = Flask(__name__, static_folder='build')
+app = Flask(__name__, static_folder='used_vehicles/build', static_url_path='')
 # app.config["JWT_SECRET_KEY"] = "please-remember-to-change-me"
 app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET')
 CORS(app)
@@ -43,7 +43,7 @@ def get_current_time():
 
 
 @app.route('/')
-def index():
+def serve():
     return send_from_directory(app.static_folder, 'index.html')
     # if 'username' in session:
     #     return 'You are logged in as ' + session['username']
