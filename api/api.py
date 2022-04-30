@@ -92,7 +92,7 @@ def login():
     print(username)
 
     login_user = db.users.find_one({'email' : username['email']})
-    print('login user is: ', login_user)
+    print('login user is', login_user)
 
     if login_user:
         if bcrypt.hashpw(username['password'].encode('utf-8'), login_user['password']) == login_user['password']:
