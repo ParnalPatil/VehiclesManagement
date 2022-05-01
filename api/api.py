@@ -16,7 +16,8 @@ import time
 import flask
 from flask import Flask, request, send_from_directory, url_for, session, redirect
 from flask_cors import CORS, cross_origin
-from flask_pymongo import PyMongo
+# from flask_pymongo import PyMongo
+from flask_pymongo import pymongo
 from bson.objectid import ObjectId
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from random import randint
@@ -31,11 +32,20 @@ app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET')
 CORS(app)
 jwt = JWTManager(app)
 
-app.config["MONGO_URI"] = "mongodb://localhost:27017/vehicles"
-mongodb_client = PyMongo(app)
-db = mongodb_client.db
+# app.config["MONGO_URI"] = os.getenv("MongoURI") or "mongodb://localhost:27017/vehicles"
+
+# app.config["MONGO_URI"] = os.environ.get('MongoURI') 
+# mongodb_client = PyMongo(app)
+# db = mongodb_client.db
+
 # vehicle_db = db['vehicles']
 # vehicles_col = vehicle_db['vehicles']
+
+client = pymongo.MongoClient(os.environ.get('MongoURI'))
+db = client.get_database('vehicles')
+# user_collection = pymongo.collection.Collection(db, 'user_collection')
+
+
 
 @app.route('/')
 def serve():
@@ -67,6 +77,9 @@ def create_token():
 
 @app.route('/register', methods=['POST'])
 def register():
+    # import pdb
+    # pdb.set_trace()
+
     username = request.get_json()
     print(username)
 
