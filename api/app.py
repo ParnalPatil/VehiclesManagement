@@ -48,23 +48,26 @@ db = client.get_database('vehicles')
 
 
 @app.route('/')
+@cross_origin()
 def serve():
     # print(app.static_folder)
     # a_file = open("fdr_inaugural_address.html")
     # file_contents = a_file.read()
     # print(file_contents)
-    return send_from_directory(app.static_folder, 'index.html', cache_timeout=0)
+    # return send_from_directory(app.static_folder, 'index.html', cache_timeout=0)
     # if 'username' in session:
     #     return 'You are logged in as ' + session['username']
 
-    # return flask.jsonify(message="LoggedIn")
+    return flask.jsonify({"response":"This is Vehicle Management Backend"})
 
 @app.route('/time')
+@cross_origin()
 def get_current_time():
     return {'time': time.time()}
 
 
 @app.route('/token', methods=["POST"])
+@cross_origin()
 def create_token():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
@@ -76,6 +79,7 @@ def create_token():
     return response
 
 @app.route('/register', methods=['POST'])
+@cross_origin()
 def register():
     # import pdb
     # pdb.set_trace()
@@ -100,6 +104,7 @@ def register():
 
 
 @app.route('/login', methods=['POST'])
+@cross_origin()
 def login():
     username = request.get_json()
     print(username)
@@ -118,6 +123,7 @@ def login():
 
 
 @app.route('/vehicles')
+@cross_origin()
 def read():
     try:
         vehicles = list(db.vehicles.find())
@@ -167,6 +173,7 @@ def insert():
 
 
 @app.route("/update", methods=["POST"])
+@cross_origin()
 def update():
     try:
         rowToUpdate = request.get_json()
@@ -181,6 +188,7 @@ def update():
         print(ex)
 
 @app.route("/delete", methods=["POST"])
+@cross_origin()
 def delete():
     try:
         rowToDelete = request.get_json()
@@ -192,6 +200,7 @@ def delete():
         print(ex)
 
 @app.route("/plot", methods=["POST"])
+@cross_origin()
 def plot():
     try:
         import pdb
